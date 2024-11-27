@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Available Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            margin-bottom: 15px;
+        }
+
+        .search-container input[type="search"] {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container input[type="search"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .search-container .icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 18px;
+        }
+
+        .dropdowns {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .dropdowns select, .dropdowns input[type="text"] {
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .post-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-card h2 {
+            font-size: 1.5em;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .post-card h2 a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .post-card h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .post-card .metadata {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .post-card p {
+            font-size: 1em;
+            color: #333;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination .disabled a {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #0056b3;
+        }
+         .create_post-button
+        {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .create_post-button:hover
+        {
+           background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Available Posts</h1>
+    </div>
+
+    <br><br>
+
+    <div th:if="${message}" class="alert">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/available-posts}" method="get" class="controls">
+        <div class="search-container">
+            <input type="search" name="search" th:value="${searchKeyword}" placeholder="Search..." />
+            <span class="icon">&#128269;</span>
+        </div>
+        <div class="dropdowns">
+            <select name="filter" th:value="${selectedFilter}">
+                <option value="">Filter</option>
+                <option value="author" th:selected="${selectedFilter == 'author'}">Author</option>
+                <option value="tags" th:selected="${selectedFilter == 'tags'}">Tags</option>
+                <option value="date" th:selected="${selectedFilter == 'date'}">Date</option>
+            </select>
+
+            <input type="text" name="filterValue" th:value="${filterValue}" placeholder="Enter filter value" />
+
+            <select name="sortBy" th:value="${sortBy}">
+                <option value="">Sort</option>
+                <option value="newest" th:selected="${sortBy == 'newest'}">Newest First</option>
+                <option value="oldest" th:selected="${sortBy == 'oldest'}">Oldest First</option>
+                <option value="title" th:selected="${sortBy == 'title'}">Title A-Z</option>
+            </select>
+        </div>
+        <button type="submit">Apply</button>
+
+    </form>
+
+    <form th:action="@{/create-post}" method="get" class="create_post-button">
+        <button type="submit"><b>Create Post</b></button>
+    </form>
+
+    <form th:action="@{/logout}" method="post" class="logout-button">
+        <button type="submit"><b>Logout</b></button>
+    </form>
+
+    <br><br>
+
+    <div th:if="${#lists.isEmpty(posts)}">
+        <p>No posts found for "<span th:text="${searchKeyword}"></span>"</p>
+    </div>
+
+    <div class="post-grid">
+        <div class="post-card" th:each="post : ${posts}">
+            <h2><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
+            <div class="metadata">
+                <span th:text="${post.author}"></span>,
+                <span th:text="${#dates.format(post.publishedAt, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+            <p th:text="${post.excerpt}"></p>
+        </div>
+    </div>
+
+    <div th:if="${postsPage.totalPages > 1}">
+        <ul class="pagination">
+            <li th:class="${postsPage.hasPrevious() ? '' : 'disabled'}">
+                <a th:href="@{/available-posts(page=0)}" th:if="${postsPage.hasPrevious()}">First</a>
+            </li>
+            <li th:class="${postsPage.hasPrevious() ? '' : 'disabled'}">
+                <a th:href="@{/available-posts(page=${postsPage.number - 1})}" th:if="${postsPage.hasPrevious()}">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, postsPage.totalPages - 1)}" th:class="${postsPage.number == i ? 'active' : ''}">
+                <a th:href="@{/available-posts(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+            <li th:class="${postsPage.hasNext() ? '' : 'disabled'}">
+                <a th:href="@{/available-posts(page=${postsPage.number + 1})}" th:if="${postsPage.hasNext()}">Next</a>
+            </li>
+            <li th:class="${postsPage.hasNext() ? '' : 'disabled'}">
+                <a th:href="@{/available-posts(page=${postsPage.totalPages - 1})}" th:if="${postsPage.hasNext()}">Last</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

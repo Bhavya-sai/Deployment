@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to My Blog</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header style="background-color: #333; color: white; padding: 10px 20px;">
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+
+        <div style="font-size: 1.5em; font-weight: bold;">Blog Application</div>
+
+        <div style="display: flex; align-items: center;">
+            <a href="/" style="color: white; text-decoration: none; margin: 0 15px;">Home</a>
+            <a href="/available-posts" style="color: white; text-decoration: none; margin: 0 15px;">Available Posts</a>
+            <a href="/create-post" style="color: white; text-decoration: none; margin: 0 15px;">Create Post</a>
+        </div>
+    </nav>
+</header>
+
+<main style="text-align: center; padding: 50px 20px;">
+    <h1>WELCOME TO MY BLOG APPLICATION</h1>
+    <p style="max-width: 800px; margin: 20px auto; font-size: 1.2em; line-height: 1.5;">
+        Welcome to the world of ideas and creativity! Dive into stories, articles, and thoughts that explore various topics. Discover the joy of writing and the beauty of expression.
+    </p>
+    <div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMwnX4TzxmuGZLxHQqk6rufArI80qldMNuew&s"
+             alt="Illustration" style="margin-top: 20px; width: 800px; height: 400px;">
+    </div>
+</main>
+
+<footer style="background-color: #333; color: white; text-align: center; padding: 20px; position: absolute; bottom: 0; width: 100%;">
+    <p>&copy; 2024 My Blog. All rights reserved.</p>
+</footer>
+</body>
+</html>
